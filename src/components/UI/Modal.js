@@ -1,5 +1,4 @@
 import classes from "./Modal.module.css";
-import Card from "./Card";
 import ReactDOM from "react-dom";
 
 const Backdrop = (props) => (
@@ -14,18 +13,16 @@ const ModalOverlay = (props) => (
 
 const Modal = (props) => {
   return (
-    props.showModal && (
-      <>
-        {ReactDOM.createPortal(
-          <Backdrop onClose={props.onClose} />,
-          document.getElementById("overlays")
-        )}
-        {ReactDOM.createPortal(
-          <ModalOverlay>{props.children} </ModalOverlay>,
-          document.getElementById("overlays")
-        )}
-      </>
-    )
+    <>
+      {ReactDOM.createPortal(
+        <Backdrop onClose={props.onClose} />,
+        document.getElementById("overlays")
+      )}
+      {ReactDOM.createPortal(
+        <ModalOverlay>{props.children} </ModalOverlay>,
+        document.getElementById("overlays")
+      )}
+    </>
   );
 };
 
