@@ -9,10 +9,16 @@ const Cart = (props) => {
   const hasItems = cartCtx.items.length > 0;
   const totalAmount = `$${cartCtx.totalAmount.toFixed(2)}`;
 
-  const cartItemRemoveHandler = (id) => {};
+  const cartItemRemoveHandler = (id) => {
+    cartCtx.removeItem(id);
+  };
 
-  const cartItemAddHandler = (item) => {};
-
+  const cartItemAddHandler = (item) => {
+    cartCtx.addItem({ ...item, amount: 1 });
+  };
+  // use of .bind in react to prepare f..n before it's execution ie. the handler is bind() to arguments
+  //which have to be passed(we're making sure these args are passed to the f..n when that f..n is executed
+  //or triggered)
   const cartItems = (
     <ul className={classes["cart-items"]}>
       {cartCtx.items.map((item) => (
