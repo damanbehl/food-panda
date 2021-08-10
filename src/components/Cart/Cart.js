@@ -1,13 +1,15 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import classes from "./Cart.module.css";
 import Modal from "../UI/Modal";
 import CartItem from "./CartItem";
 import CartContext from "../../store/cart-context";
+import Checkout from "./Checkout";
 
 const Cart = (props) => {
   const cartCtx = useContext(CartContext);
   const hasItems = cartCtx.items.length > 0;
   const totalAmount = `$${cartCtx.totalAmount.toFixed(2)}`;
+  const [isCheckout, setIsCheckout] = useState(false);
 
   const cartItemRemoveHandler = (id) => {
     cartCtx.removeItem(id);
@@ -16,6 +18,11 @@ const Cart = (props) => {
   const cartItemAddHandler = (item) => {
     cartCtx.addItem({ ...item, amount: 1 });
   };
+
+  const orderHandler = () => {
+    setIsCheckout(true);
+  };
+
   // use of .bind in react to prepare f..n before it's execution ie. the handler is bind() to arguments
   //which have to be passed(we're making sure these args are passed to the f..n when that f..n is executed
   //or triggered)
@@ -34,6 +41,19 @@ const Cart = (props) => {
     </ul>
   );
 
+  const modalActions = (
+    <div className={classes.actions}>
+      <button className={classes["button--alt"]} onClick={props.onToggle}>
+        Close
+      </button>
+      {hasItems && (
+        <button className={classes.button} onClick={orderHandler}>
+          Order
+        </button>
+      )}
+    </div>
+  );
+
   return (
     <Modal onClose={props.onToggle}>
       {cartItems}
@@ -41,12 +61,8 @@ const Cart = (props) => {
         <span>Total Amount</span>
         <span>{totalAmount}</span>
       </div>
-      <div className={classes.actions}>
-        <button className={classes["button--alt"]} onClick={props.onToggle}>
-          Close
-        </button>
-        {hasItems && <button className={classes.button}>Order</button>}
-      </div>
+      {isCheckout && <Checkout onCancel={props.onToggle} />}
+      {!isCheckout && modalActions}
     </Modal>
   );
 };
