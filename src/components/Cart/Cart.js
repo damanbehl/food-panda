@@ -23,6 +23,16 @@ const Cart = (props) => {
     setIsCheckout(true);
   };
 
+  const submitOrderHandler = (userData) => {
+    fetch("dummy/orders.json", {
+      method: "POST",
+      body: JSON.stringify({
+        user: userData,
+        orderedItems: cartCtx.items,
+      }),
+    });
+  };
+
   // use of .bind in react to prepare f..n before it's execution ie. the handler is bind() to arguments
   //which have to be passed(we're making sure these args are passed to the f..n when that f..n is executed
   //or triggered)
@@ -61,7 +71,9 @@ const Cart = (props) => {
         <span>Total Amount</span>
         <span>{totalAmount}</span>
       </div>
-      {isCheckout && <Checkout onCancel={props.onToggle} />}
+      {isCheckout && (
+        <Checkout onConfirm={submitOrderHandler} onCancel={props.onToggle} />
+      )}
       {!isCheckout && modalActions}
     </Modal>
   );
