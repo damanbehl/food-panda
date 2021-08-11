@@ -11,10 +11,12 @@ const Checkout = (props) => {
     city: true,
     postalCode: true,
   });
+  const [isSubmitError, setIsSubmitError] = useState();
   const nameInputRef = useRef();
   const streetInputRef = useRef();
   const postalCodeInputRef = useRef();
   const cityInputRef = useRef();
+
   const confirmHandler = (event) => {
     event.preventDefault();
 
@@ -39,13 +41,25 @@ const Checkout = (props) => {
     if (!formIsValid) {
       return;
     }
-    props.onConfirm({
-      name: nameInputValue,
-      street: streetInputValue,
-      postalCode: postalCodeInputValue,
-      city: cityInputValue,
-    });
+    try {
+      props.onConfirm({
+        name: nameInputValue,
+        street: streetInputValue,
+        postalCode: postalCodeInputValue,
+        city: cityInputValue,
+      });
+    } catch (error) {
+      setIsSubmitError(error.message);
+    }
   };
+
+  if (isSubmitError) {
+    return (
+      <section className={classes.SubmitError}>
+        <p>{isSubmitError}</p>
+      </section>
+    );
+  }
 
   const nameControlClasses = `${classes.control} ${
     formsInputValidity.name ? "" : classes.invalid
